@@ -1,0 +1,596 @@
+Searching 88296 files for "v4u"
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/composer.json:
+   23          ],
+   24          "psr-4": {
+   25:             "Inventionstar\\ZipChecker\\": ""
+   26          }
+   27      }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/README.md:
+    1: # inventionstar-magento2-check-delivery-availability
+    2  Delivery Availability Checker for Magento 2
+    3  
+    .
+   16  ### Install via zip
+   17  
+   18: * [Download the latest version from GitHub](https://github.com/vrajeshkpatel/inventionstar-magento2-check-delivery-availability/archive/master.zip)
+   19  
+   20  ## Zip Code available.
+   ..
+   34  Open the Magento 2 Admin Panel and navigate to:
+   35   
+   36:  ## Stores > Settings > Configuration > Inventionstar ZIPCHECER > Check Delivery
+   37  
+   38  <img src="docs/ConfigurationSettings StoresMagentoAdmin.png"/>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/registration.php:
+    2  \Magento\Framework\Component\ComponentRegistrar::register(
+    3      \Magento\Framework\Component\ComponentRegistrar::MODULE,
+    4:     'Inventionstar_ZipChecker',
+    5      __DIR__
+    6  );
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Api/Data/GridInterface.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Api\Data;
+    4  
+    5  interface GridInterface
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Block/Adminhtml/Grid/AddRow.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Block\Adminhtml\Grid;
+    3  
+    4  class AddRow extends \Magento\Backend\Block\Widget\Form\Container
+    .
+   31      {
+   32          $this->_objectId = 'row_id';
+   33:         $this->_blockGroup = 'Inventionstar_ZipChecker';
+   34          $this->_controller = 'adminhtml_grid';
+   35          parent::_construct();
+   36:         if ($this->_isAllowedAction('Inventionstar_ZipChecker::add_row')) {
+   37              $this->buttonList->update('save', 'label', __('Save'));
+   38          } else {
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Block/Adminhtml/Grid/Edit/Form.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Block\Adminhtml\Grid\Edit;
+    3  
+    4  /**
+    .
+   17       * @param \Magento\Framework\Data\FormFactory $formFactory,
+   18       * @param \Magento\Cms\Model\Wysiwyg\Config $wysiwygConfig,
+   19:      * @param \Inventionstar\ZipChecker\Model\Status $options,
+   20       */
+   21      public function __construct(
+   ..
+   24          \Magento\Framework\Data\FormFactory $formFactory,
+   25          \Magento\Cms\Model\Wysiwyg\Config $wysiwygConfig,
+   26:         \Inventionstar\ZipChecker\Model\Status $options,
+   27          array $data = []
+   28      ) {
+   ..
+   51          );
+   52  
+   53:         $form->setHtmlIdPrefix('inventionstar_');
+   54          if ($model->getEntityId()) {
+   55              $fieldset = $form->addFieldset(
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Block/Product/View/ZipChecker.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Block\Product\View;
+    4  
+    5  use Magento\Framework\Registry;
+    6  use Magento\Framework\View\Element\Template;
+    7  use Magento\Framework\View\Element\Template\Context;
+    8: use Inventionstar\ZipChecker\Helper\Data as DataHelper;
+    9  
+   10  /**
+   11   * Class ZipChecker
+   12:  * @package Inventionstar\ZipChecker\Block\Product\View
+   13   */
+   14  
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Controller/Adminhtml/Grid/AddRow.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Controller\Adminhtml\Grid;
+    3  
+    4  use Magento\Framework\Controller\ResultFactory;
+    .
+   12  
+   13      /**
+   14:      * @var \Inventionstar\ZipChecker\Model\GridFactory
+   15       */
+   16      private $gridFactory;
+   ..
+   19       * @param \Magento\Backend\App\Action\Context $context
+   20       * @param \Magento\Framework\Registry $coreRegistry,
+   21:      * @param \Inventionstar\ZipChecker\Model\GridFactory $gridFactory
+   22       */
+   23      public function __construct(
+   24          \Magento\Backend\App\Action\Context $context,
+   25          \Magento\Framework\Registry $coreRegistry,
+   26:         \Inventionstar\ZipChecker\Model\GridFactory $gridFactory
+   27      ) {
+   28          parent::__construct($context);
+   ..
+   59      protected function _isAllowed()
+   60      {
+   61:         return $this->_authorization->isAllowed('Inventionstar_ZipChecker::add_row');
+   62      }
+   63  }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Controller/Adminhtml/Grid/Index.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Controller\Adminhtml\Grid;
+    3  
+    4  class Index extends \Magento\Backend\App\Action
+    .
+   28      {
+   29          $resultPage = $this->resultPageFactory->create();
+   30:         $resultPage->setActiveMenu('Inventionstar_ZipChecker::grid_list');
+   31          $resultPage->getConfig()->getTitle()->prepend(__('Manage Zipcodes'));
+   32          return $resultPage;
+   ..
+   40      protected function _isAllowed()
+   41      {
+   42:         return $this->_authorization->isAllowed('Inventionstar_ZipChecker::grid_list');
+   43      }
+   44  }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Controller/Adminhtml/Grid/MassDelete.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Controller\Adminhtml\Grid;
+    3  
+    4  use Magento\Framework\Controller\ResultFactory;
+    5  use Magento\Backend\App\Action\Context;
+    6  use Magento\Ui\Component\MassAction\Filter;
+    7: use Inventionstar\ZipChecker\Model\ResourceModel\Grid\CollectionFactory;
+    8  
+    9  class MassDelete extends \Magento\Backend\App\Action
+   ..
+   59      protected function _isAllowed()
+   60      {
+   61:         return $this->_authorization->isAllowed('Inventionstar_ZipChecker::row_data_delete');
+   62      }
+   63  }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Controller/Adminhtml/Grid/Save.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Controller\Adminhtml\Grid;
+    4  
+    5  class Save extends \Magento\Backend\App\Action
+    6  {
+    7      /**
+    8:      * @var \Inventionstar\ZipChecker\Model\GridFactory
+    9       */
+   10      var $gridFactory;
+   ..
+   12      /**
+   13       * @param \Magento\Backend\App\Action\Context $context
+   14:      * @param \Inventionstar\ZipChecker\Model\GridFactory $gridFactory
+   15       */
+   16      public function __construct(
+   17          \Magento\Backend\App\Action\Context $context,
+   18:         \Inventionstar\ZipChecker\Model\GridFactory $gridFactory
+   19      ) {
+   20          parent::__construct($context);
+   ..
+   52      protected function _isAllowed()
+   53      {
+   54:         return $this->_authorization->isAllowed('Inventionstar_ZipChecker::save');
+   55      }
+   56  }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Controller/ZipChecker/ZipChecker.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Controller\ZipChecker;
+    4  
+    5: use Inventionstar\ZipChecker\Helper\Data as DataHelper;
+    6  use Magento\Catalog\Model\ProductFactory;
+    7  use Magento\Framework\App\Action\Action;
+    8  use Magento\Framework\App\Action\Context;
+    9: use Inventionstar\ZipChecker\Model\GridFactory;
+   10  
+   11  /*
+   12   * Class ZipChecker
+   13:  * @package Inventionstar\ZipChecker\Controller\ZipChecker
+   14   */
+   15  
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/di.xml:
+    1  <?xml version="1.0"?>
+    2  <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    3:     <preference for="Inventionstar\ZipChecker\Api\Data\GridInterface" type="Inventionstar\ZipChecker\Model\Grid" />
+    4  
+    5:     <virtualType name="Inventionstar\ZipChecker\Model\ResourceModel\Grid\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    6          <arguments>
+    7:             <argument name="mainTable" xsi:type="string">inventionstar_zip_checker</argument>
+    8:             <argument name="resourceModel" xsi:type="string">Inventionstar\ZipChecker\Model\ResourceModel\Grid</argument>
+    9          </arguments>
+   10      </virtualType>
+   ..
+   12          <arguments>
+   13              <argument name="collections" xsi:type="array">
+   14:                 <item name="grid_record_grid_list_data_source" xsi:type="string">Inventionstar\ZipChecker\Model\ResourceModel\Grid\Grid\Collection</item>
+   15              </argument>
+   16          </arguments>
+   17      </type>
+   18:     <type name="Inventionstar\ZipChecker\Logger\Handler">
+   19          <arguments>
+   20              <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+   21          </arguments>
+   22      </type>
+   23:     <type name="Inventionstar\ZipChecker\Logger\Logger">
+   24          <arguments>
+   25              <argument name="name" xsi:type="string">customLogHandler</argument>
+   26              <argument name="handlers"  xsi:type="array">
+   27:                 <item name="system" xsi:type="object">Inventionstar\ZipChecker\Logger\Handler</item>
+   28              </argument>
+   29          </arguments>
+   30      </type>
+   31      <type name="Magento\OfflinePayments\Model\Cashondelivery">
+   32:          <plugin sortOrder="1" name="restrictByCustomer" type="Inventionstar\ZipChecker\Plugin\Payment\Method\CashOnDelivery\Available"/>
+   33      </type>    
+   34  </config>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/import.xml:
+    1  <?xml version="1.0"?>
+    2  <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_ImportExport:etc/import.xsd">
+    3:     <entity name="inventionstar_zip_checker" label="Zipcode Import" model="Inventionstar\ZipChecker\Model\Import\CustomImport" behaviorModel="Magento\ImportExport\Model\Source\Import\Behavior\Basic" />
+    4  </config>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/module.xml:
+    1  <?xml version="1.0"?>
+    2  <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    3:     <module name="Inventionstar_ZipChecker" setup_version="1.0.0">
+    4      </module>
+    5  </config>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/adminhtml/menu.xml:
+    2  <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    3      <menu>
+    4:         <add id="Inventionstar_ZipChecker::manager" title="Zipcode Checker" module="Inventionstar_ZipChecker" sortOrder="10" resource="Inventionstar_ZipChecker::manager" />
+    5:         <add id="Inventionstar_ZipChecker::add_row" title="Manage Zipcodes" module="Inventionstar_ZipChecker" sortOrder="20" parent="Inventionstar_ZipChecker::manager" action="grid/grid" resource="Inventionstar_ZipChecker::add_row"/>
+    6      </menu>
+    7  </config>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/adminhtml/routes.xml:
+    3      <router id="admin">
+    4          <route id="grid" frontName="grid">
+    5:             <module name="Inventionstar_ZipChecker" />
+    6          </route>
+    7      </router>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/adminhtml/system.xml:
+    2  <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    3      <system>
+    4: 		<tab id="inventionstar" translate="label" sortOrder="400">
+    5:            <label>Inventionstar ZipChecker</label>
+    6          </tab>
+    7          <section id="zipchecker" translate="label" type="text" sortOrder="450" showInDefault="1" showInWebsite="1" showInStore="1">
+    8              <class>separator-top</class>
+    9              <label>Check Delivery</label>
+   10:             <tab>inventionstar</tab>
+   11:             <resource>Inventionstar_ZipChecker::config_zipchecker</resource>
+   12              <group id="config" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+   13                  <label>General</label>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/etc/frontend/routes.xml:
+    3      <router id="standard">
+    4          <route id="grid" frontName="grid">
+    5:             <module name="Inventionstar_ZipChecker" />
+    6          </route>
+    7:         <route id="Inventionstar_ZipChecker" frontName="zipchecker">
+    8:             <module name="Inventionstar_ZipChecker" />
+    9          </route>        
+   10      </router>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Helper/Data.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Helper;
+    3  
+    4  use Magento\Framework\App\Helper\AbstractHelper;
+    .
+    8  /**
+    9   * Class Data
+   10:  * @package Inventionstar\ZipChecker\Helper
+   11   */
+   12  
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Logger/Handler.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Logger;
+    4  
+    5  class Handler extends \Magento\Framework\Logger\Handler\Base
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Logger/Logger.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Logger;
+    3  
+    4  class Logger extends \Monolog\Logger
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/Grid.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Model;
+    3  
+    4: use Inventionstar\ZipChecker\Api\Data\GridInterface;
+    5  
+    6  class Grid extends \Magento\Framework\Model\AbstractModel implements GridInterface
+    .
+    9       * CMS page cache tag.
+   10       */
+   11:     const CACHE_TAG = 'inventionstar_zip_checker';
+   12  
+   13      /**
+   14       * @var string
+   15       */
+   16:     protected $_cacheTag = 'inventionstar_zip_checker';
+   17  
+   18      /**
+   ..
+   21       * @var string
+   22       */
+   23:     protected $_eventPrefix = 'inventionstar_zip_checker';
+   24  
+   25      /**
+   ..
+   28      protected function _construct()
+   29      {
+   30:         $this->_init('Inventionstar\ZipChecker\Model\ResourceModel\Grid');
+   31      }
+   32      /**
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/Status.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Model;
+    3  
+    4  use Magento\Framework\Data\OptionSourceInterface;
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/Import/CustomImport (copy).php_replace:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Model\Import;
+    3: use Inventionstar\ZipChecker\Model\Import\CustomImport\RowValidatorInterface as ValidatorInterface;
+    4  use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregatorInterface;
+    5  class CustomImport extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
+    .
+    8      const ZIPCODE = 'zipcode';
+    9      const ISACTIVE = 'is_active';
+   10:     const TABLE_Entity = 'inventionstar_zip_checker';
+   11      /**
+   12       * Validation failure message template definitions
+   ..
+   77      public function getEntityTypeCode()
+   78      {
+   79:         return 'inventionstar_zip_checker';
+   80      }
+   81      /**
+   ..
+  199                  $this->countItemsDeleted += $this->_connection->delete(
+  200                      $this->_connection->getTableName($table),
+  201:                     $this->_connection->quoteInto('inventionstar_zip_checker IN (?)', $listTitle)
+  202                  );
+  203                  return true;
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/Import/CustomImport.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Model\Import;
+    4: use Inventionstar\ZipChecker\Model\Import\CustomImport\RowValidatorInterface as ValidatorInterface;
+    5  use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregatorInterface;
+    6  
+    .
+   10      const ZIPCODE = 'zipcode';
+   11      const ISACTIVE = 'is_active';
+   12:     const TABLE_Entity = 'inventionstar_zip_checker';
+   13      /**
+   14       * Validation failure message template definitions
+   ..
+   81      public function getEntityTypeCode()
+   82      {
+   83:         return 'inventionstar_zip_checker';
+   84      }
+   85  
+   ..
+  240                  $this->countItemsDeleted += $this->_connection->delete(
+  241                      $this->_connection->getTableName($table),
+  242:                     $this->_connection->quoteInto('inventionstar_zip_checker IN (?)', $listTitle)
+  243                  );
+  244                  return true;
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/Import/CustomImport/RowValidatorInterface.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Model\Import\CustomImport;
+    3  
+    4  interface RowValidatorInterface extends \Magento\Framework\Validator\ValidatorInterface
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/ResourceModel/Grid.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Model\ResourceModel;
+    4  
+    5  /**
+    .
+   38      protected function _construct()
+   39      {
+   40:         $this->_init('inventionstar_zip_checker', 'entity_id');
+   41      }
+   42  }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Model/ResourceModel/Grid/Collection.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Model\ResourceModel\Grid;
+    4  
+    5  class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+    .
+   15      {
+   16          $this->_init(
+   17:             'Inventionstar\ZipChecker\Model\Grid',
+   18:             'Inventionstar\ZipChecker\Model\ResourceModel\Grid'
+   19          );
+   20      }
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Plugin/Payment/Method/CashOnDelivery/Available.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Plugin\Payment\Method\CashOnDelivery;
+    4  
+    5  use Magento\Customer\Model\Session as CustomerSession;
+    .
+    7  use Magento\OfflinePayments\Model\Cashondelivery;
+    8  use Magento\Checkout\Model\Session as CheckoutSession;
+    9: use Inventionstar\ZipChecker\Model\GridFactory;
+   10: use Inventionstar\ZipChecker\Helper\Data;
+   11  
+   12  class Available
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Setup/InstallData.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Setup;
+    3  
+    4  use Magento\Catalog\Model\Product;
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Setup/InstallSchema.php:
+    1  <?php
+    2  
+    3: namespace Inventionstar\ZipChecker\Setup;
+    4  
+    5  use Magento\Framework\Setup\InstallSchemaInterface;
+    .
+   27  
+   28          /*
+   29:          * Create table 'inventionstar_zip_checker'
+   30           */
+   31  
+   32          $table = $installer->getConnection()->newTable(
+   33:             $installer->getTable('inventionstar_zip_checker')
+   34          )->addColumn(
+   35              'entity_id',
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/Ui/Component/Listing/Grid/Column/Action.php:
+    1  <?php
+    2: namespace Inventionstar\ZipChecker\Ui\Component\Listing\Grid\Column;
+    3  
+    4  use Magento\Framework\View\Element\UiComponent\ContextInterface;
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/view/adminhtml/layout/grid_grid_addrow.xml:
+    3      <body>
+    4          <referenceContainer name="content">
+    5:            <block class="Inventionstar\ZipChecker\Block\Adminhtml\Grid\AddRow" name="add_row" />
+    6          </referenceContainer>
+    7      </body>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/view/adminhtml/ui_component/grid_record_grid_list.xml:
+  135         <column name="is_active" >
+  136             <argument name="data" xsi:type="array">
+  137:                <item name="options" xsi:type="object">Inventionstar\ZipChecker\Model\Status</item>
+  138                 <item name="config" xsi:type="array">
+  139                     <item name="filter" xsi:type="string">select</item>
+  ...
+  147  
+  148         <!-- Add Action with each row of grid and for this we will create a class Action -->
+  149:        <actionsColumn name="actions" class="Inventionstar\ZipChecker\Ui\Component\Listing\Grid\Column\Action">
+  150             <argument name="data" xsi:type="array">
+  151                 <item name="config" xsi:type="array">
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/view/frontend/layout/catalog_product_view.xml:
+    1  <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    2      <head>
+    3:         <css src="Inventionstar_ZipChecker/css/zipchecker.css" />
+    4      </head>
+    5  	<body>
+    6          <referenceContainer name="product.info.main">
+    7:             <block class="Inventionstar\ZipChecker\Block\Product\View\ZipChecker"
+    8  			after="product.info.review"
+    9: 			name="inventionstar.zipchecker"
+   10  			template="product/view/zipchecker.phtml" />
+   11          </referenceContainer>
+
+/var/www/html/magento26/app/code/Inventionstar/ZipChecker/view/frontend/web/css/zipchecker.css:
+   23  }
+   24  .zipchecker-product .form-product-zipcode .zipcode-box .zipcode-inner .control .input-text{
+   25: 	background-image: url(../../Inventionstar_ZipChecker/images/location.png); 
+   26  	float: left;
+   27  	padding-left: 26px;
+
+/var/www/html/magento26/pub/static/adminhtml/Magento/backend/en_US/Magento_AdminAdobeIms/package-lock.json:
+  522        "version": "9.0.0",
+  523        "resolved": "https://registry.npmjs.org/get-stdin/-/get-stdin-9.0.0.tgz",
+  524:       "integrity": "sha512-dVKBjfWisLAicarI2Sf+JuBE/DghV4UzNAVe9yhEJuzeREd3JhOTE9cUaJTeSa77fsbQUK3pcOpJfM59+VKZaA==",
+  525        "dev": true
+  526      },
+  ...
+ 1003        "version": "5.0.4",
+ 1004        "resolved": "https://registry.npmjs.org/postcss-normalize-whitespace/-/postcss-normalize-whitespace-5.0.4.tgz",
+ 1005:       "integrity": "sha512-wsnuHolYZjMwWZJoTC9jeI2AcjA67v4UuidDrPN9RnX8KIZfE+r2Nd6XZRwHVwUiHmRvKQtxiqo64K+h8/imaw==",
+ 1006        "dev": true,
+ 1007        "requires": {
+
+/var/www/html/magento26/var/cache/mage--0/mage---c1c_SYSTEM_WEBSITES_BASE:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 14558 characters> ...1MPOXVT+HslswQ8AXbjvvI8NF28Yb4jXTxFRf3LiC/3VLNee6A+WEiW2k3kcgskM4aU2H6Cb12BOa8nNbqi0z6dfeyLUoKu+utVziGEls/xY61j2lBgLybS7UgTz3V1r4XWTg23XGdkB1oH4XjtF+B8naszBL2InpEGrgCYRl1sl/uRfNoO/J5VvEg9k6SFLclYyYqYT53+/hhvxUzlVAZE+r9mLGuI2etlOTWeDwDY3E4sQ7sZ+tGKHtWpktZAM8pPiL/B1OXFlSvnTTy2HrVdIHaAd5nA+62qF+X7VUlNhv4uUXj5ToqbtHGm7oj5kHlO+hVIcSNxm5WzUbikewry7IkQNWqLVVEXp20DJ9A/sBJ3eoEsEAOjYVU7i6KsRWbyxcWBVNHlYFBjmAyO1L+bGP/GV/noTluBqTfUAMI+kDd8JKFwGz0TI8/CZni4zsWd30tTPgqoV7DA/j10FTN9wWjJjSkLF/InNa0N0qCX8sPL+r7NG6pus3LXEI4n7wzkF0tfsIc6ibxUAzoaTklXRSe+ppjZVmcqXzVkFxu4g9DG2R/TmKMisrOdgMCdk6YSwpJBqHcCdaj0OY2DHvuouTZy... <skipped 49412 characters> ...d5ORBDmWbmLGfSfS5Ik4qZsXiRhYNzT3p7vbXZDvrky74emn7eE4z67p9SJXMAMNiuYQn7nAPfFNiLgh+fZldPANPbxtf56mCAYMh2FYQQdbnF0VYAdhCGAk3gnQ71TXQLfdMfWXZtciaJqq/uAKkwcXwLQXjBKVlk7bFsRaLtlCleT9AJylt76dgp2+Z9n25Ua70sDvZKH+L9EL0sPFkH8dGyy6ZmlN4+K3QQcuz2uJUX3ZvFZQrF0JZ+x+Gb3HGQk21Ej6C8ME5B82LqzGQ33Tnsdl9/LuNViuICFi7ZAbV4UbwI8OCfiZpXkFc6VybmOG98CTOIHRWMZTsbrsTORYCqbQtsButcY9/tXrMT9uvxJc3OnXCsQ+Q0hlc1ln6zwDV5X8m1sXhkSII9yvbX0t7qZNl8slkyQKdK9jVS0DNvJsxrGigBTivqPXKyh3k4qEI2nXAkJRjfODvvCBRJp0vrom6ule+hF7H8cMI/DDayzjQoog0NLLTmiJgb9ofw2YG9cto5MAdeaQ4gpW1eoCQQjBKJ+J6nPksxh2Dg/llocLhWhM1wEkXeLfdXo23BRwt/ApyKuNRoA/C1S4JEtI63y... <skipped 46536 characters> ...
+
+/var/www/html/magento26/var/cache/mage--3/mage---c1c_SYSTEM_WEBSITES_1:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 5545 characters> ...6GR8ZpOo3Lml1fOOMkNu9RsUu2/qPnW4MpJzpdUnKXjGuLrPbiYc7SVNPocKA5Anl6WCS5O9jJZrR9AxJoCuPn/NuT4f5MmIZ5OP1LfvCawCjBVhe9UkaxZGjEh2AGhTLUImfVYdmNW9IdWoZRb9y3FN6MI6A7LM+XEJhEW9ZdLOWY2I4jmPu52GHxrqwp0+RAiD4YTZHzJnkwD0eKYNz0mIouNxC0ufpqiwucnDK8tB9oPCN2kxwwglnkknfEVlzI7zXMWDB94Hdr0MgsUp65gwdZWwmPSWFhRurqTKeCYcV4uEbtJUdwkO1urwwRPOXvWJsyDXqlsoR/kjPqjyL+YrBLqvnYhkxJei4H04/L3rQ3YA8Ag8gu+EyQLnoMNjsX598taLP1v2O+W9HliM/Cie9+jD5VzdZ3U6lP2kUdZVkgTp+EbXlPW6b33ZJOxzCfciVGmKvGzrVpCmvs/Iqr/KxJr1DLofjQtJ8c6q3rM+mZZDqfP/Cw47PioZveI7liKK4krso53AFqSy2mcnl3PP6VESx6fQILxhuupS7U8mGrgw2nTvO6LHMBGwuELVs70pM701RzeOGWAsVI4dqf0zXSn... <skipped 105564 characters> ...
+
+/var/www/html/magento26/var/cache/mage--6/mage---c1c_SYSTEM_WEBSITES_ADMIN:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 30646 characters> ...Ut44p8qZakV+LRwMnVJjarAsPdyntmxYZCoaEwrPwe5ixpo79H9UmNsicAtP7ufdFB7tpSH4M8wNjqDL/5hPPc2NaD9BhVngCcoPs7c5clPyZeQRym8js7TE0laFMXk9kMKlZLNWs2Ohc/NY4VJc2l7RvprJ88HlbbpqrI8yPV3lJ3cEuuxR132XGfvjUmDZz536h07hu2kFqStHco2sOgGVfr+zFTWK7DifvNBMoW0zxdLbhCQ2YplOgwPfIpzKoOgh8VHlhGOFc2rQ2rKXhO+Azb9eapxjJVFwMrq+du0eV4UeSQ+xtBnpcJtFCLAkpU55eHHRvNRmUhXQMxQ87cdCZASgPSPRIQUoYCk8tQTVYyvgU91xre9+3E74vD/MjeppXaz44aScKLDoq/AWRfm9O++nqEpTCFSX2B2JykCsgzqkSsIehR3UkGgeEDqmaRU0TKXgwqLkbdODx6vNSMANUFSIKT3NBL208Lt3iHF09I+jNDIVEQz5s8OQdUKXoyjSp4+yqWcHK5V0/XvTMKRctAAyZRYrkud9qztnqnDYASKRDbLbyCGommmH8FQeYpjFqM/RRJEibKsADYCnZqemaf8... <skipped 80559 characters> ...
+
+/var/www/html/magento26/var/cache/mage--7/mage---c1c_SYSTEM_WEBSITES_0:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 33873 characters> ...FY6UgOupN32UCAIJ4etOVMvKbqV3FfEe+EVP7+2dhfPWMPKl8st+TiCT6lWnq+gb0Kk77TVjOx9VtnMlKULfDscnVWssAXENLHZCb5sfsx3hQz9pH+tl4enY/tdyAWK3zcdkrtQZT7eF9kx1Gt241Pwih6zyw9dC8sLWC+W6C/FvgWH0Qacg37ms6lRoU65DokjJnFN1vwkHggR/EPReO9JD22a4weg2/du276EtbwkaZkccLkyqFaY+aESKrrmcHxf6qwPFTpzop8oU/+P7hasoiOzW/NM1cBvExkdPDigVv4ujxhlCvRxp+P7LRuklgY78YCrnyE2d3QMdlMPo6tDnG/zG8Xhcp0XnFahr6ZnQUh3qJRZcwj6/a1mtCdEZdra7cMdHLRuHsau5Oz0PyD09dqDjB0QW5GZ278oASOm6rpk8BzSI5L3VYgyNIP4poc7270xXSafG1aGGlAGamFJYY++HasJsS4+hNsBnzvItIPslRQUjb0Kr9ps3oSXSx4I/0CRa9j72Mx+BQeRtvTzccmJoyEk9yiLl4JHginf8IT0LCB24ASSmt1Duz5LN1EL/xGU+tf47HxgGauWIW5lA1jv... <skipped 30936 characters> ...TlDbCTT6opmD+jFZOQ7q+JQk6W9q7QVQh+mJyoHikTBuR8SHsBMIrocZVcwC6xnplQ94OwrEpxwiUFpyPu+Wt3jGQ+xRYiRB17FAZtSHJNZORtbLSAGi7KHdII9gU1L15RuP5SVPRWMSV20jDvfMhI7O9AcCxMce0amRfTiWoHdNxHZ3GIxH2bjmI5tDb6pr8nrPwQsDjA6ymFdlkFE7PJXtSZvnGXejb39H69tx7I5KUKsAp/UCm3ObrKchP0V42yfiBdBOJi504PaAydo6IyBSevNGLeXOMqZJ/ttl5tvIv4u8DaRzDIhVhhmNmXknTwJLGz0ddiz4uuFgn5vtjogihkHB6JS1YWE9weP/cwRxp0cRzjNphYElgkiDTbsEJzqv00SW+ULpVw8h0tb+RZG6ihd1/sX+2qhNZAeCOtrco9NsGXr9z56pUrlLJuZGUz9qPuFvbnoOL4mWkPR+Nkqhe0uw90gumt3E/zvsqYi7cg3IGjw7WJuezJLnBukHdbekrpdGjKXhgDzvMba8qmzYFnlNTtAgzjbuUM3apEBvT80Aa8rxWLATwedHBA/KJx7m6GLzLsU8VGbWO0S+wijl9Ue... <skipped 45793 characters> ...
+
+/var/www/html/magento26/var/cache/mage--8/mage---c1c_SYSTEM_DEFAULT:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 55559 characters> ...pjReNkWNNObCZwF5iDCzzSN3xxoku3iYn2/bmrUOGzLoYIa/lmUkQWbtqd5QRT6jrZEdWFRgNdAZD0T/o6/q5TVLApdQOKAZ6sF/NFv6Z9tH8lVXo5/YgJwOYTVf3ZIVQoTkpEXBEhiERJXFUeaCyH75CUpM3Urm6Pyb304l18RThRf+BKaHBX5EJk3H9oTO+3ZW8o75XqMrXmxk0JY6/QPEx9Lebx+umuNEAPEJVuJBtWvjcSHyyYC0LxdsNtxQ8FiVTh6f0nogDv7a+CdTgcr3r8FoOF09vTD3dJbGnpsiv4u6wgDHrzkTYGah0tXdY2qgyBnSy2pWYrNgY4DgqBI3c6NpiWUnNuE/IESlWOeIfxsQTK+M21fMHQS7pScy9NkemA5+sy4kmEBwSB/ALwJMBz5SQw3qt+/D7njOdR7pwwW+e+D/RS9TvK8aP6ZLalYnPp8T7VJDdP5M33M2h+9ixTYyvEy5eMmBHZQBXzYZprJNOhj46haIfnrUqa6XnZxfDRY/x9bueKJnWGt4V0CHM2UNaBSVnaTnUVnKNUKqKeeLHfPK+7cpraEzvKx4Dld1YVn3gdjD0dq83PCAhGdItpc... <skipped 917 characters> ...BU3riobEH+p01kHl4xvUDmBXq60fb2XVNnlI2q8dMBN2Li9TrskTLE4IFTNwSWRm5azh142RkHXJqTvpKlidYhse3vDc/Ruf6O27uzPYvMxXJuzEggcECNMyLN2tpY0yiXJav1LGIu0vd+5qgTgEIYCd9iAMXucevv+fNgYNVlbfSrkB2WuXd1peqeC1CC0Ow/TBO9HdZ6kwfxorZ7Ruze+Xa/e8dKdPYlsqs4vV8vr/0WpFu/7j/VOt0/AAfmdLtAxPRDireW2Z3ho0GookEnBHww6ET4ttwk8dJgSav3d6V4UfmuZT/Y9YCmG9hi4oYw/+z8QamTPPZx6DzooQ/fUlWX1EeVC7xY6DL2AXsFFJhgsrw+XqIHRZCBln7mHx0MFuCM+xuotjQo1Adn7Fng3IrHI8YSs57LYhyhrIhQ6ykc5fEIZmBVewJ+8TfBwWlDBEB5/vz/LgUAEMvE0xKMn3ADnNJ8SF5YCnE+lB6f/moKcFIMMnJWGZvn9Rie2zdnYeW6vQ/vsVWh7jR71liDwVV4vqGRAPFEzS5J7NrmE7BZBGxsOxHLJKoF74tlX9myP9LUQUoFj3/k36O7xqQ2w3G0h... <skipped 40062 characters> ...1inhUWlQgjEhezR46W7nG4d5PLiF1fZ7lovpAif5f70UKcGV0Gbj2DQuBNIb4WQvOQ4aegJtdOQ1N06rieYSxb90V54ta3g3GOxKRtMuIv2y+oUH7SQL2VbigeeiYWQud7j9DpMf41P3fj2GvNnZfkJbuDcwtKtl1nLWlsvAzpCTAi33XMiANcgXutgktu28gK/yVAWAn2jqyVGkuGKkYwqKCQF6xqmKJoT7TM77z7IaY0xdBNouHz2u2QAfH3aLSk8MzPtCRGPCu22Y7nXMB4VM2YKHW5fVFlLE50mmSV7kV4uC+wISa0euYoGXMmjXck3DBhv+Cm18uJh4EcDf0zP2AX+rIfhgP1KThYx20egIqYMKNV9xpjI+v0+rJTxGm51rkadJJKQPqL+/RT++dExAJIXqy4VQPaiFu1cKXdRJLK8aYw4nj6ZTCjpkkpW0+40OwL5YJsH8H1VgOJfjS8boIjkDBYBnFwZ/Kf9l1xKJKT7DanpdvAKxJqmz6d0GkbL0SKIEtEoHlTEJR5w/Ie3IFJlmEouiIeqAIkIXcB+8uxLRLDZk+GAorlE0H34xT9eEbJ13zxxPuDj3IbltA7RS32t... <skipped 13365 characters> ...
+
+/var/www/html/magento26/var/cache/mage--8/mage---c1c_SYSTEM_STORES_0:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 97319 characters> ...u19O/Ni33RWGMbaekwjqE8oPxNLra5fk4CkMkh6R7elVi1Arq6UzVlzMDKhMmTl3h7L+aPmJ/wNpW4/3UaVs5ZoIj3hddBYzW4MahcSN9dDp/sUft3NlGug2fkPbq1slnDu66jJpVtnng1Ra79znx4RpkLbIkZrIw/eSoypwjINKNxKXIYHWm4xNQEIWwKQZUaZ51BF1jc7bvWpbL1gZDnEQ8owkm3I6EoSVphaCVk4TmEiX4UDzLMknxu3AhgAScr3sjy/WBzVgcn+qGYioFJdszEkSNvr3wQNAozhRbWjgv4uoTI+13ttg0l2HSkSTkhayq1hqVcJTpOksk6LHfW/RT0aW5cfTmFCuHRWSNwV1bZrQ/7y7w6ixNaAW4a8fimfg0D10x92kmN8tpzrHA/ExSKLgqLSqoKTO5bYGQFef61uYtJ1pykDYGwm86FNu9UTOQLz2TomKlRmqHeqwlG8rm44MstCP26FFPmD5ec7d11jwn5NyvbFpBkHCgsqjUhatWb6kT59MJQg9k6p5O2rCOnJrzVyP325McWNMDk84jcMuWNuVsS+BugC/q/zEwX+9yGba6lCDQeuE3OSWdmriaft... <skipped 14006 characters> ...
+
+/var/www/html/magento26/var/cache/mage--9/mage---c1c_SYSTEM:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 80883 characters> ...Xj9W1OIGrtm4FNrt+Ao2t7/gYDfhe+jWKCaiTCRNMNwKFjXNfBpOEylH3WhG56tUJA6xTY0qMHl1BhrEn4lQ259G5oKonwOF5e+4wv8L7lcpczHt05F1IiYcroWURVnk3aIMn5q7GVQHCWybfppNVO9hzCmkclVkX2c0sxTTkLlFSkgvrhN4RxlUv4KFsNrrhkgXu9AYXk0XLzXYpYYbvP42TPPWIBubUslPkiqVule5l7Pcz24GWw3IOrAFKknzpex5N4NsWw779sLy+oOlCqYnky7XEVm9RP4HSuTaEBXMv4Ub/oJCfbooDzYApxVa49CeenwIhlfT0wiAE4EH85ITkVFZHbcPhRXTGl8Mhc+saqcRYDwDj9jqqUNXnyNDsWxFHCGSmm0z5JGTkeY0YovEt74YVxKj17olLMY2PD8xv2BSBgBBzTfmyEOwlFb3HMrh6G4PZvwFHlPZSiB+POS5QbZcu9kSEk6mD+lubWs0+oKySN4H18VXBbxcNtXVBRorUKwL9qGS7aIwghQRTBbi/H6F1mMr+ohwcW49o3rxT6LLSooefwF5/Qr+as/tYI0/zQKyJVl2qEB4XM2AqrSl2fu... <skipped 20490 characters> ...vhfZSpQeBZ1klN7GxV1bM+9+gAB1ocplpKBU5eM5jJHGc7YG8oNpkn+d+jiwnOKw+kzi8IiA7QvAGBIywSZtk4Qj6J8AOCvOxwPCGSJuZR5RzSwIWZRkUDtbqtyL8hGF2dnpZ88NJaxCh9yb8i8l2kHyeTGyIrHOgamwZcgl0HnrUumEvu8zGPMoWWh3mp4SDw3x2oauPSrx/4uEGIYu9x97BBVtce23dKFwausxIc+lZ5j0AffT+dMgKg7ebGSXZ4pXgZCfN9eH2YCqe3gI9hOx3zCgx8InahmZdktVtJ3wv4U+1aQs3AR/QdqQn6Orcqjq7/wdYg0z6ouHziyiVOIPU23GQ39ZT7wctHRzXP2PZhe6zqAS5qFzPlD32L6s2R6uHh8j/Ifw99etE9vbkB9rBQPsxzmJGg79LSiqbi6OqP8MhdCBKdcdE+JGUFjY5RA4rL57bcbcvzKqddcffSTAQ6ZFAQNeRlUHFR9eLxRw9qRsBLvNMRAfdPV1rRZ/+50Rouqmoe8TzeJR0fH5AqG1uG7n7nw8bLb9P9lzGeo5K22auhDbV1Ujqfc4lEXrjTU7keKGdxXxV1TbfkD5hyO2TW7... <skipped 70446 characters> ...Bfr1cembLTa4T0Lu59N4QJEAR4Zjr0Ti33q4c5p6KwPOhdtiy/wn46z1D9OJynpemRUMwagqATr2FEZYQAeVw7O1oFJ8SVVngzC4oFJjkn86JE0upkIX57NifzTu8g0nQ+6ryqqvNYR/iP0O19K1UqajguV3McG9loEJDtZxBTmSIA8NrG/0CcNvzSZsvzZMjNvq9vzJ6fl7cJvm5yt0Tp4uobW7CTkwcZp0K3taaCqPqEa6BlQvkyLvS06kyLv2Uid7YtRxmg1O0cSsT8xfuriCn1pOIwxYalItchhI2wn7v4uCFPeQN0RDXFpclrCf33Se6pGH7b3iLHvt/Nx7bJ62084DjUW0cEwxfPgRg7T3AKnQ87uHsoiu2SwnONy/uK4LuE2cFQz5ZHjJlxGxqxvzoyck4JSJyTdDPksPgzK/qdEPegv6r+newNzq1+yHC/hUgUrZKZlwlpHS5Xiflowa5QYN9IwvKER/ciIUd6pBSq+NiS8DjjGEs1uTdr0gJ72Ro1fMGbD42XpEDR8nmGikG+uFqz3+IAwa18sFC1CfYdIVAIt8w369RgHnSrXymWGnvbk6a1uNWeObHNTge+jhywC... <skipped 6833 characters> ...CZnIfPJTBrj58a34x1/yE1E7lUb8ZC89fE52WVR/LRrOvSX8rClmLY5sY0JbXK3Iuqc+htOEDy+okBgAyorQhsZYeSprLAS44RgdWbvAcbHjjPj7is2lMUhTRy2d06Bv3AdqYS1/wUown93i0TczXTDQM4QvPUyt62U01j1luSyVBHRXnjC1EtTF5j5KW3Bu25LKPEqyB3lSFcK1Tp8DJrZj4W8d7eDA62UCQGEnzlXE4RqZk/vby/dA5bO3acCpG32a9s/X9383GvWgeRPTBL1khQnXmQAJT5BS8wk22MNXv4Uy/Ed75izHXWFVTR6mG+L7DOgnazOpSRTZb0sEhdWpc9xPof4FDWa929O+iwcFLsu2D22LuxPvrQoREx7eAEe38g5EjuGKMDWInZbOezqre3CJPpGFTa4OuDrk4iB+bHPrYux8Wl9hBvOIPyzkLZCV2WcTIibeq35GIffwzRAAnGqoSkPcPy4whe/fykOMCVspzgRDUpWzz40NmBdA7FALt7vD4wviJTtlJOvN5csTC2fHLYC6Tb7OnDDx6u5ptjQ5LyMxMJeGPqA2qkyfK5UlvixP96VdD2dzWWCkcGdE7VM... <skipped 4783 characters> ...LUoHOdguOu20ozOcgRgkdE9p0KsYudWR2WQMcuZm9me6SpatE61zeCY1xngCo4/Cu5L95HFk1ZUm3ArxFcuQA25ImVch/o72sS3WYsoOOCEN7PakUlTRVZu7C4WQd86ZJEfSySf1V9C9aAuAx1+zZlMwiSvN+lmqBttopkE5w1oOvY4AG9ZE3IhtExPnpuP2rDOvMYA6+ep94kPTkCN3slQvsQhq6hg1XyGSn6LxRC7PYDeWDWROueKT6bFZGi5ohs4E1MRoZ4faZ1ISUT0TvR782qIwt+G7cPNkaQkpgz0nv4U1VvJXq07UJkKHfcLZPZx2XoafIEwtNbLQb1T01/uajwQ1LoUb26Se9mpYym6l6myar0963iDGViqt0o3m7m38feoxh02gi0QVDHlTtkeqQIMmdmEOJRMheWucaH7QWf/9ZXKVrtjS5k7Oils4MgZrP3gYsiuwXP5J6b6LBfJVaKZ3DQ0tTBzv2EXNdgiYAt1YAae0mAUUw6PfOMpb5pESmCix0Zcc7ugF33JvrkxICCfYa96Z53Nlt1toOPy8FvPTcm0NpTkCp1PYktyASFtNTzURvbBCt9F10IDD6l6EO3h... <skipped 59024 characters> ...14z/llzfYCtmeWzigE4cL9pfaKdEn+SyGT6uPpx5o2Og7hEaNtbuDg+5QFpgCeYv522R+QZ1Sihj9sz1DYsQGritBrbytdHgThrE7kwRJvrMHyIwJ60BdcWjgT5bVnDkvQDGJfYnwwuoC0u6clPX/5ZQa2MsLf9HApHz1nAhLmsUS4nK07dRXjQblrex7HiG4zM3597kvy5CV6+YIffHh5rKo5Nlac9fLbdMml55+eK3oK/ehAmzx94/fLUq1nnYXQ6LvDGw4iIWTfH7loYUOfDQPnnEjpOtctcwlJcNS97uV4UIB825ykoqXnT0WwkzfL1FgsjVcK1AarbEhnyAk/W8H1WxTJ43pDninEtnyRXJDx5oxoemsLslshgLh4yQutQLR75VoQ2VVXhH/h62q8fXsESEPiBNNR7jtli6/ciJak7ny/BSbq07jv5KcsTcwQzm+wZU2XPLCH6uHvhNLW6Z+XUp8X3oDJoaLyeCH0RcB/sePUEZUQl2ex3UpQP8fiLYmZyreLkUW362EI4vU/unU8yky+BfAi1NjruAcs2Mus37diL5V+UlAL0dOsvYxImJ23jlilbEOJpO8d+zR/TIcNg... <skipped 94830 characters> ...L3XAENFRvldLjkhE3yM4UoQVAS017ECNZJo3TNyprfqC3Yp/TnHie+RC/6P1ivzwc8K/LzmrH4tkEvm6uspp354hm1cvlouOKmsYK9utsgN0qjiOnvMM0SXbh2iYKc9YGsrOw2kFVrqQZ9fnzYPh/7SvujvWn/I1riB2SpOG5aYGV9HCbFnlPLh9KykQPaZgMxDYFGkn3luEWywBG+yNctfS9lzR/yTNsJ9nxLmlVM+CO6NUlatz9pLN7HQCxYGlkocgIsxEN66wlZNWDvoeILcmeOAulNGh5l/CM28+RmtWV4uNqDZq6GCaxcD/BROam4Is5oYI6PTyA7zHvCikjitff/Ny02LiWEX4cZqXqZrv+bc+VOP+qgMWeERPwhAnSPCmK1zRGG0zpx7SkD4P8Zkg6lqCFB1ExX0JytrlljnGa0p5ATQNlxJlK24UmHqcNQ1EVlWRYdKUcZys4J470l8b0hcjRBrvxGXfpvRITajiprDp502PWMSdp7WE4qPB+ZuYy/qqy5qo565Au4fMI++GZ9l3KaqJ0yFe1rmpcbHjsbswEWsoHLOEW13hBhIy5dOD0Dvkdpw36AJoFSuDNC2ubY1... <skipped 12567 characters> ...TipH8UN9jxMImekESvi8JASbWdWGgURWfC13AdIsqV0SpfLCYLaJWL+voLoHQ9yPc40pXzD6ICsWqcKdYGjRFFO1ore30dlBdKGu/u4wSwHmti2kVof3ErICdIW7OnXDRblYd++Ki8T1Iu+Qh7yf+raWvNfNCz72qZSvrrgraNDM8/8HJQu6Z4pKjx4654CZL1V+n/biWrrQyQFEu/v9gkH9mwSllBl9f7iUViARYxTYzP25o5XGSQhaRHy2W0I6QGoqOaZ6Clt2yH2398TazuzJJnNCqZ0/m2S66/NEnlWPv4UdatnXlhupu3BSJ/f7azfH5glyN9MYpQcIdudMyxmxhLQURKJmItvpOA2O595Z7eMUEZ6pWkylNp9Bwm1CSvuhD+OVWNDFngVhT6gALaLRRU9HeeKQKaDCzXGECEheIKq1Me98x631+KEI4Eosqwtz8pfUk7GDvS3lsi4V5Tl5Ah7sR+DQh4dHbcFjAmb9QGwvbMmNc2NEHDy3nWr8aJWTVUIa1zi8aZCC2AhKwlLbTCescDvbHqmRi/60g3xbXngXDmWi4wS7rIH7q2Lvo8DZ1scmPQxWXWeGvncPwgqPMVk... <skipped 159829 characters> ...rehe2BxNDCegvnytWdeloA3P0zfoVcUUoO4X0xUP80OSgQf4MS8BJ6mKUWqsBSrEjbkNoD5NaAyQFdcm0yC6/4aIE/omNYHbtydey1iLMzzyWyyRjC73wIBobjeWn2gBUz+4J1je+yXFt8ooFcf4TEWvVY/JUfXNk5kcHXS1R2vuqP6HTjZeFEB25f3dl/bJNrIC3zpFeUkjrPbJRioHGDWnQVtAEeFLug39wQNLUUBfzEWhFmTC0M51FDYqWTnJkfS3VkrY7DPEWf81YHgksDuMu2RksrKP45/WzFwHu40bv4uOw2D1rwQZruCZTNZZUKN9f7fw2QAIlGiyvxs8lSgvUFLMNPWxe53mL37RWEUM17gqUJOSAAE+olcrw9DPdj/FXDvQcTzXrJdss8E5DeOlS2dLN+Pinzy9FwXWmPUuiplop/zYLbM2VLmL2yMTkwN19U/CyYyMq9p6FUpLsmrF9mRTtrdzUS0/04pOxN7GHzPr+tJlYKTxZur4juvGMyquchdFP0hC1+Fvg2Gxx2BufGtb71UC1PIJworL5PNdS2sCJzd1tgJ7b7hT55GHQyp+AUBzPs1T3m1/d0KEsQaIex1... <skipped 119681 characters> ...ECy/Crv8QxS6WBf5W+Zbt1fBoWbNYgRAOww2OsYmfpo5QGv/urQmzvo6+vYCC/auQT6Ot3BaH9hmd9CUnVUuZbuPSq8I/b4V1n0+4Sm9qPg3KcML5qDP88fMbHOpMBQq6Qo26NMc/GjqLdX/BpOZ24K0Y8dq/WspzNEmZbuenIzjO1Oy+Kdk5EJam1sVeik75BH6/OH79jpd6dwH8lxTkNRc+gIm/Zltcl7hdHvG/1nb3FbMZmPTKZwuI1vbExozfgLQ366NgKeeGuJHbW9q2Z4eT5f66GQlhsV9btaeTuIHV4u3aOxGZu68+eAJeBVuSqN9HrC6Jz6w6blU04HdypLgIfqPoWVB5ssgTyJvj6Ld0lAUxWQ8kLPQjlSIMH9Be8dB596aQLEN7h4AoWweHLvl3zvYd6MNEkAc2fl9cMJDpQ1Vvhi3U5nXuHAPSLnjw8WblyeGvsGgcG/u1SYmx6/nLk6GYVol6XE3NJSAqX1t51Zw3uqpvlAwtA5RUtOCgZ7xTIjM8Pv4dzLN+n4yGAUOiadv2S7xnE0fuYqp2oY4LVDxryiUwjf4PdeyNxkt8ye2MIpQdF1wnnrZwFkI7n/m+vz... <skipped 20923 characters> ...Izz++BL4XdcPCLL2X/fjLC+9IxpLfpFfLCU+iOCY0tMyloaMlGzsnK1Kk8JhwiRBdOUF0RZuNEcBvwuKsLLA/AUIGWirIn8geGs3dizu8mEsqbgRiRf+s0gOHlgoEGz4JhsUnrB/VB2r9kfQE3gIRQq5xa3324VRn/0QTkTHmjzAkYWuD3HFXp4Oj3fr/0YpcKUaf56yuNqt0YReTMCtUGzV08lD2eol8FinL+Z+J5dkHfNM2Y4iu0EVA7wgCwLW0FVX1NkF02d79aJZbQoO6QY9U5fUsN0uf8XV47nEzX/kV4uBAbQaQXOfg4dQueUHxrr/k7n2k2gt4+teRbi5Ljn5sY1NTe5duxTSRtfQyc75/hWijfPK/VWN1aqrAEQy1vTFtj6/Dr4OE453dUQj83FsrK/LfopPO9G3MpKka0ic6H/XPX37HGrN5ZoIu+iZ0LWdS/MWhrkNwr43FY8HvDTC4tHyrAj5kF+3RmU6Zq1/3n/fFtiIq0NmUeRdGYZsuVPE2AtmRI7+pxUVsuQHQwFj9kmCAzxf7oSb3i1JVvn2t/vH6+i6bERcYl4taTA9FmMtfng6aBjGZ484+eNJZD4JJcp... <skipped 29314 characters> ...PlONVAB1O4u4oA7de9Jb+bTMO6ShHx7qUewyhEs93eyy1g3imz3G3mzPBbw2EbqXKg/S0Lr/5Up/wnm0evOnfHjIfc9yAehDpOUGoDkVz15lX6Uh4yU8MbhPwsDiCrwg1BGYczPejFRX6f8IFIwKrEYyoufZWt12BaYNxRuUgcOuvBUyIT0EfcbP9rDOI9lNoNHrEPcgu/gi5sE7IlYPlpFGcIA7gZYkYb5a8QYaJiIvuE0A4lR8NO2hX1P7ekVlVYhhENP1Wx2kaV5cYKfBD+0OeFVYN3EC0wIG2ebvEqtcV4uJ/5sTbRM+7K3QStN33G9DvSPPJE3jSvRkMK6g7Ll6bVQ+5jmlkeT7s47XwpmB1B7BmPZkES8YdMak3eJWNmnP+Gs3FSgSnj2kLCkAUkCZE4U8mw+yC/CLr6wG4E9d5UiyQoZOVMBghIeZUHeUEvVZDiSnIJc4IA9jDLA1l4g8GsLy7h4yrUXR4XAdU3U0TBiTfj3Dg7drAMwIOZ9oNq8vFcl06erp2RV/fhXa0LSN3MNRGS2RamSjdhobJephUXwx53aDLaTUkaIilcoeQOUlDhC5abAll0O9gLDmykdz5vP... <skipped 2779 characters> ...tuWMfezfWxSHJUFdsYRpnbYpcapY0x4t2EN/WVeh2HaeE53CcxFSVuLQNteaEbftn+7KAR8wqB/xcNwYF5MPCzESYOpVdgiK3/ICwYnR5rS9PPpFDr6kjBcpuumgvoIrhBropWsaJFZRRlV976YZ/xZe8b/Rj4EW2bY8wO5xcZnA2+E2egkJUinNDmBAalc2r4oblmZSzo3QZNfCsSu3B2g8jv8F+YEQXatMkdPFVoW+FizWVuK6oJCmBI+yWS1ThE9nXxrVgII3Cv7u2ZIBKYorVL4QTRPkhaUal4TjuL1fV4udiax0igONhvnZrEAzJlVuO1cQMGRuYx1TKpoz+CvZKV5vuX4XAt3QY7H+wtAsIaOaH+BsAsvJ0Ha8F218Ne1c5qsEn/EeY7qOUP3rvJQyrcTLaNfTL4DmagAoMYR0iG4wjLcrqnhz7BxKE+SdvYV90v9NLEd4s76ecSB2J862jK9RSyUq1fK0OmWuUHazyIh6g74c4qpmhI1j4RaTAT7OwdyWAF7uIXvrC17D0TyKqtYdDSwRT2YKbanSYSo/I1NrQYqdJXgdYU1m9YWzpix+iIMSU09joumYjxNO8WtFoH+... <skipped 64309 characters> ...EIajJyn2vlsRnayALZ6PUJJRGxY2bnoBPGhbWTEIrhr/2Za+ginh9ttyX1IqKBFwMrBADJckWivkpwgRf3S2XlAkTRdbuVxbX5AX9sIwUXnghEfMsuBEhDxbx46HXyCvGQ6xTVCQPtW/NJ+cwrDSFtnAlKJCPuccJVzwzSVkbhhThw3JzaOEWGAJDlsgR0M5+rRik5LpbgZlSL0cA2riVun04BBZUbU1NiTbrRrZyHG9u5Uwy7oTJIZQmEE7umoCc4WonK/fwl0nsm/wr81vQ+LaUv83nn6ViqCUFUQ/TFqHv4u3M75Bj5szPHsSh2ADapxARbGIrgEnESp0aXx3lCR6Lx7thRdaeATfwSqlJxz15z6HS6McAEBOBL0TpUjd+2WsXPgzWZSjCKqYArUlgoNFf5El3l7iOpzDUwb32PA9wVzEjuEj1mv5WTeapARATly0XCla7REnex9fzrrMtx6QKtbkCBudmV3XYApjUXSaafsOLusbIH7XMdG7gGb7WUhUNhxG4kw1omCnMc8xEJpU34+iNQ9MNW5EJV/knAv68pR1INGM5q9f+Qof0elZa4Jh0YQYHc5K5lm50rEWhLGAjqR... <skipped 48034 characters> ...WR4umU7kAECEz2ufIWG1pkbF/QicMH4jHEp9i5proBU0srZsvrGWKN0vxsnVLneqV3dBDJ6/ONrk9/6QUVtxm7bDHmEWp2QT1c0RP+jYe+En0Vi67XrGRs+tn+ZxG1GM2hZ8LR0QYAUUF4NEY63keKrTuq1TQIy+l+ggojLR9kGfpoMD6zxRerK+CsnFSWj94nTyAB6Ptltk3RFC6W6B2IQC0K+avbPP8NsNf6IOqUTxiUvdfqjvXnV4xF4xZy4quQw+JdxUDw3r9HK9/aKHHZpHyJHhEbldW8GR8sxvu9XrV4usWrY9S0Y0KuIq08JviUg8HTMPHZRwEBuv/k/TeVNLIsm3s/SKJQxzuA9T5ny0vXyrrmzeofX0Mnohp8juxWHACzwIGAO6LjBpgBVxfMZzs87u7/8jE5O+lu2Wo3x2F3entIFpAt4sk9GscdqwI/RM+nRDmcVQf/Gxrv5sKZGmd1yJ8nR3U7cUUbatTIT//Q8E4IMnxZXXjI3FUdVPZyLbTeOmlJZEF2fuoDebEdLgZ58+AK1BdxpZ4eH0GzaY1eCXUFKVzC6hkO8yrHs7W9aSAEtaUll3M0OCtH3VGkZ7acI... <skipped 84995 characters> ...HCQfHGgUj8OyUlc/Da/7K3C/bDCHOpeOPl8AJnvbbokHkmmWj0Egs4MglP+77+9SI/VLPHgwd56yXyvZGyfz9pSBZn5oGdUFXGx+OOm2vThRUi4wAOq9Uh+fsPiiLYgjUHFVg9lNvrhbuL7A1fmpeb9erSSTpbzK3Hk6Vs9/rWOxR/fEA5jVvQoQqF3wZEgjsKw9T3Xk/CxbBDZP5tTrd/1usYysuvjTjfEVh0OKRWtRxqCriJM1tNnMkgmsz7HVg4NlRnwv4712HptS0Lf7CDd2pmMTMcbdGjLksGqoAB4PV4UhK75h3b0b6vnrFUCj5Acc15E2ctDHS+7e+ccNY00ZankpXCGygMlEl0au6+ZdLC8muckzLuajZuL93HbvGAu0y5zDUYTOKzihsxJDnZy2EX0NUEKQpv33h5RNq0pwHxzp09/XMYlTnlXLxZ0T6EfxgNgFHkavdbIZXK9RK/MGBpRXHP0UMQNhJRY9x6yeT1x9oidGKrlun3n0uQ9zGJ3/A1M66xRMjSOGLElBaQbyORGCGPBhO8Wqc3IoMrm2qQ3BiPFanxdOYioDZVcckGXwyzDNDhc2kdXbJ9QiQSV8MWi... <skipped 116496 characters> ...
+
+/var/www/html/magento26/var/cache/mage--a/mage---c1c_SYSTEM_STORES_ADMIN:
+    1  a:4:{s:4:"hash";s:0:"";s:5:"mtime";i:1704719980;s:6:"expire";i:9999999999;s:4:"tags";s:37:"c1c_CONFIG_SCOPES,c1c_CONFIG,c1c_MAGE";}
+    2: <skipped 32037 characters> ...hbjOGKZzGhu4nBO3BK+/jcDWGHxiXDdNkHP3skUoUX0Bo20hDRiqOgpISjAuv6WJEaq84nIgmSp4mpYzIJBfi9mgSlMY7ctRvvcFRQOfgHO3so2nsCLvjD/XBOj7Z99BVTDiR5BJiz25tVG6yjeBzJ9eXQ9ebvYfGqpaaAqqZoxPp/jD2CHTYs5iMHd3aNcborJE4Tb8trJJlmx/wzpD5ABL114w+nHIWzZWfctAkobBm75vgAaoyvsZS7hS75Dnb7CLGLyFT4wjJYkL10037mPQjU+52ZHgMmChCWNBAj0bV4UcAGl50417bph3PJmIA0z7JeTGVy5DbTuIlorSRkDEhd8l7iCqtc4934HKjAmkRu8a6kvYFzAUKJNb2bB+b6Hy0tkgsIVLkRdFNzKAPVLIysnmO65a1qybrriGFQPPXAO62u3SvW2HLPO6jJ5MMnUwbPJRItM2pmf28BjI4cMhIRVSV4v8/dT5lkVkJUahqH+YaRaHGPV+mUXEJb6+9XvkUdAekJbkBky1Fk13iY8OIKGm25KmnOabT7yTDg9lBItcV68R1OJvq8gsanfUTeSWrINzgQb6x2nKKMmggzppcyZ... <skipped 42483 characters> ...AENWE587LEjUPduOLqTF/oWxH12Ry6SZKc4Qxk+lfP5IPBNASZnNXLcl8mOULBdVCSxfKTQVgW81xz5w6ectuX62GFAUjjzwzmakrTggdQ93ExDZUFk/iiHCUaBhojIjF/PTNddw9IrglnWav+VDhTec3VVMSVjucjv1DMZ5uD5mQSLIMzFPiS95leHhMmd1lvO9JKMPNF6i4vUhGmzwpkKl7zvWrftVUNO++qRufYS7FlSWUvvCH5CMDpAzBHteycL8sQcxVGwzIAJk8PwXbIQ6/KipyqUlpnnyvRjxmDwgV4URkr8kTi9H0ixCtMC6H1kv6QfU0mE2rlj0PjiYHxAdQpjfqydrU4vSbx8q4hkj0Y+MbF3BAtNA5+0bdyrxsOTVRaRxP83++tKXirV/2Xh88gsDrXPntb9Wa6huajtRQ8H2DjQBVQrbKnM+CLi1RsrMkPrAfCmw9+aa2ayKrRDyTU+crg7b7rjSNOivc8T9cBLUq5Uh8ixgzguYKxWDdJwk7b350Oe+KCgcg9cIaSz45JLvuwi9k4ewqdWZglugIggJUrq/PaVWIH1EsZ7PDJOM/ani8zBSx2K5JcJl+UuseTv... <skipped 36202 characters> ...
+
+/var/www/html/magento26/vendor/composer/ca-bundle/res/cacert.pem:
+ 3039  y748fdHif64W1lZYudogsYMVoe+KTTJvQS8TUoKU1xrBeKJR3Stwbbca+few4GeXVtt8YVMJAygC
+ 3040  QMez2P2ccGrGKMOF6eLtGpOg3kuYooQ+BXcBlj37tCAPnHICehIv1aO6UXivKitEZU61/Qrowc15
+ 3041: h2Er3oBXRb9n8ZuRXqWk7FlIEA04x7D6w0RtBPV4UBySllva9bguulvP5fBqnUsvWHMtTy3EHD70
+ 3042  sz+rFQ47GUGKpMFXEmZxTPpT41frYpUJnlTd0cI8Vzy9OK2YZLe4A5pTVmBds9hCG1xLEooc6+t9
+ 3043  xnppxyd/pPiL8uSUZodL6ZQHCRJ5irLrdATczvREWeAWysUsWNc8e89ihmpQfTU2Zqf7N+cox9jQ
+
+/var/www/html/magento26/vendor/endroid/qr-code/assets/noto_sans.otf:
+    <binary>
+
+/var/www/html/magento26/vendor/magento/module-admin-adobe-ims/view/adminhtml/web/package-lock.json:
+  522        "version": "9.0.0",
+  523        "resolved": "https://registry.npmjs.org/get-stdin/-/get-stdin-9.0.0.tgz",
+  524:       "integrity": "sha512-dVKBjfWisLAicarI2Sf+JuBE/DghV4UzNAVe9yhEJuzeREd3JhOTE9cUaJTeSa77fsbQUK3pcOpJfM59+VKZaA==",
+  525        "dev": true
+  526      },
+  ...
+ 1003        "version": "5.0.4",
+ 1004        "resolved": "https://registry.npmjs.org/postcss-normalize-whitespace/-/postcss-normalize-whitespace-5.0.4.tgz",
+ 1005:       "integrity": "sha512-wsnuHolYZjMwWZJoTC9jeI2AcjA67v4UuidDrPN9RnX8KIZfE+r2Nd6XZRwHVwUiHmRvKQtxiqo64K+h8/imaw==",
+ 1006        "dev": true,
+ 1007        "requires": {
+
+/var/www/html/magento26/vendor/phpstan/phpstan/phpstan.phar:
+    <binary>
+
+/var/www/html/magento26/vendor/rector/rector/vendor/phpstan/phpstan/phpstan.phar:
+    <binary>
+
+142 matches across 51 files
